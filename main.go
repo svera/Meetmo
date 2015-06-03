@@ -4,6 +4,7 @@ import (
     "net/http"
     "html/template"
     "github.com/gorilla/mux"
+    "github.com/svera/meetmo/models/meeting"
 )
 
 func handlerNew(w http.ResponseWriter, r *http.Request) {
@@ -11,8 +12,9 @@ func handlerNew(w http.ResponseWriter, r *http.Request) {
     t.Execute(w, nil)
 }
 
-func handlerCreate() {
-
+func handlerCreate(w http.ResponseWriter, r *http.Request) {
+    meeting := models.Meeting{}
+    meeting.Title = "Test"
 }
 
 func main() {
