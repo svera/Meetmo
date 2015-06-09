@@ -13,6 +13,11 @@ func New(w http.ResponseWriter, r *http.Request) {
 }
 
 func Create(w http.ResponseWriter, r *http.Request, db *database.Database) {
-	meeting := models.Meeting{Title: "Test"}
-	db.Insert(&meeting)
+	meeting := &models.Meeting{
+		Title:     r.FormValue("title"),
+		Attendees: r.FormValue("attendees"),
+		Agenda:    r.FormValue("agenda"),
+		Outcome:   r.FormValue("outcome"),
+	}
+	db.Insert(meeting)
 }
