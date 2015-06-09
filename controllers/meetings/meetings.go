@@ -1,17 +1,18 @@
 package meetings
 
 import (
-    "net/http"
-    "html/template"
-    "github.com/svera/meetmo/models/meeting"
+	"github.com/svera/meetmo/core/database"
+	"github.com/svera/meetmo/models/meeting"
+	"html/template"
+	"net/http"
 )
 
-func HandlerNew(w http.ResponseWriter, r *http.Request) {
-    t, _ := template.ParseFiles("views/new.html")
-    t.Execute(w, nil)
+func New(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("views/new.html")
+	t.Execute(w, nil)
 }
 
-func HandlerCreate(w http.ResponseWriter, r *http.Request) {
-    meeting := models.Meeting{}
-    meeting.Title = "Test"
+func Create(w http.ResponseWriter, r *http.Request, db *database.Database) {
+	meeting := models.Meeting{Title: "Test"}
+	db.Insert(&meeting)
 }

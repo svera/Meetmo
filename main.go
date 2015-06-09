@@ -2,11 +2,11 @@ package main
 
 import (
     "net/http"
-    "github.com/svera/meetmo/routes"
 )
 
 func main() {
-    http.Handle("/", routes.AddRoutes())
+    defer db.Close()
+    http.Handle("/", routes)
     http.ListenAndServe(":8080", nil)
 }
 
