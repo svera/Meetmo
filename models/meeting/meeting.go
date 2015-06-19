@@ -1,15 +1,15 @@
 package models
 
-//import "time"
+import (
+	"github.com/maxwellhealth/bongo"
+	//"time"
+)
 
 type Meeting struct {
-	Title string
+	bongo.DocumentBase `bson:",inline"`
+	Title              string
 	//Date      time.Date
 	Attendees string
 	Agenda    string
 	Outcome   string
-}
-
-func (m *Meeting) GetCollectionName() string {
-	return "meetings"
 }
