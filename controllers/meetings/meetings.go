@@ -15,10 +15,10 @@ func Index(w http.ResponseWriter, r *http.Request, dbConnection *bongo.Connectio
 
 	for results.Next(meeting) {
 		meetings = append(meetings, *meeting)
-		fmt.Println(meeting.Title)
+		//fmt.Println(meeting.Title)
 	}
 
-	t, _ := template.ParseFiles("views/meetings/index.html")
+	t := template.Must(template.ParseFiles("views/meetings/index.html", "views/shared/header.html"))
 	t.Execute(w, meetings)
 }
 
