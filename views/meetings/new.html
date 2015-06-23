@@ -50,7 +50,8 @@
       <form method="post" action="/meetings/create">
         <div class="form-group">
           <label for="title">Title</label>
-          <input type="text" class="form-control" id="title" name="title">
+          <input type="text" class="form-control" id="title" name="title" value="{{ .Meeting.Title }}">
+
         </div>
         <div class="form-group">
           <label for="date">Date</label>
@@ -58,17 +59,17 @@
         </div>
         <div class="form-group has-error has-feedback">
           <label for="attendees">Attendees</label>
-          <input type="text" class="form-control" id="attendees" required="required" aria-describedby="inputError2Status" name="attendees">
+          <input type="text" class="form-control" id="attendees" required="required" aria-describedby="inputError2Status" name="attendees" value="{{ .Meeting.Attendees }}">
           <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
           <span id="inputError2Status" class="sr-only">(error)</span>
         </div>
         <div class="form-group">
           <label for="agenda">Agenda</label>
-          <textarea class="form-control" id="agenda" rows="20" required="required" name="agenda"></textarea>
+          <textarea class="form-control" id="agenda" rows="20" required="required" name="agenda">{{ .Meeting.Agenda }}</textarea>
         </div>
         <div class="form-group">
           <label for="outcome">Outcome</label>
-          <textarea class="form-control" id="outcome" rows="20" required="required" name="outcome"></textarea>
+          <textarea class="form-control" id="outcome" rows="20" required="required" name="outcome">{{ .Meeting.Outcome }}</textarea>
         </div>
         <div class="form-group">
           <button class="btn btn-default" id="cancel">Cancel</button>

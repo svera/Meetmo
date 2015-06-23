@@ -1,9 +1,10 @@
 package models
 
 import (
-	"errors"
-	"fmt"
+	//"errors"
+	//"fmt"
 	"github.com/maxwellhealth/bongo"
+	"github.com/svera/meetmo/core/form"
 	//"time"
 )
 
@@ -17,11 +18,10 @@ type Meeting struct {
 }
 
 func (m *Meeting) Validate(*bongo.Collection) []error {
-	err := make([]error, 1)
+	err := make([]error, 0)
 
 	if len(m.Title) == 0 {
-		err = append(err, errors.New("Title cannot be empty"))
-		fmt.Println("error en el title")
+		err = append(err, &form.Error{Field: "Title", Message: "Title cannot be empty"})
 	}
 	return err
 }

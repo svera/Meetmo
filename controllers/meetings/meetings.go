@@ -1,8 +1,9 @@
 package meetings
 
 import (
-	//"fmt"
+	"fmt"
 	"github.com/maxwellhealth/bongo"
+	"github.com/svera/meetmo/core/form"
 	"github.com/svera/meetmo/models/meeting"
 	"html/template"
 	"net/http"
@@ -34,5 +35,20 @@ func Create(w http.ResponseWriter, r *http.Request, dbConnection *bongo.Connecti
 		Agenda:    r.FormValue("agenda"),
 		Outcome:   r.FormValue("outcome"),
 	}
-	dbConnection.Collection("meetings").Save(meeting)
+	err := dbConnection.Collection("meetings").Save(meeting)
+	if vErr, ok := err.(*bongo.ValidationError); ok {
+		for _, a := range vErr.Errors {
+			b := a.(*form.Error)
+			fmt.Println(b.Message)
+		}
+		data := struct {
+			Meeting    *models.Meeting
+			FormErrors *bongo.ValidationError
+		}{
+			meeting,
+			vErr,
+		}
+		t, _ := template.ParseFiles("views/meetings/new.html")
+		t.Execute(w, data)
+	}
 }
