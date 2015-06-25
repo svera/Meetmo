@@ -18,10 +18,38 @@ type Meeting struct {
 }
 
 func (m *Meeting) Validate(*bongo.Collection) []error {
-	err := make([]error, 0)
+	errs := make([]error, 0)
 
 	if len(m.Title) == 0 {
-		err = append(err, &form.Error{Field: "Title", Message: "Title cannot be empty"})
+		errs = append(errs, &form.Error{Field: "Title", Message: "Title cannot be empty"})
 	}
-	return err
+
+	if len(m.Title) > 255 {
+		errs = append(errs, &form.Error{Field: "Title", Message: "Title too large"})
+	}
+
+	if len(m.Attendees) == 0 {
+		errs = append(errs, &form.Error{Field: "Attendees", Message: "Attendees cannot be empty"})
+	}
+
+	if len(m.Attendees) > 4000 {
+		errs = append(errs, &form.Error{Field: "Attendees", Message: "Attendees too large"})
+	}
+
+	if len(m.Agenda) == 0 {
+		errs = append(errs, &form.Error{Field: "Agenda", Message: "Agenda cannot be empty"})
+	}
+
+	if len(m.Agenda) > 4000 {
+		errs = append(errs, &form.Error{Field: "Agenda", Message: "Agenda too large"})
+	}
+
+	if len(m.Outcome) == 0 {
+		errs = append(errs, &form.Error{Field: "Outcome", Message: "Outcome cannot be empty"})
+	}
+
+	if len(m.Outcome) > 4000 {
+		errs = append(errs, &form.Error{Field: "Outcome", Message: "Outcome too large"})
+	}
+	return errs
 }
