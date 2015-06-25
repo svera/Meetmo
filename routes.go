@@ -20,7 +20,7 @@ func setupRoutes(dbConnection *bongo.Connection) {
 	routes.HandleFunc("/meetings/{id}/edit", func(w http.ResponseWriter, r *http.Request) {
 		meetings.Edit(w, r, dbConnection)
 	}).Methods("GET")
-	routes.HandleFunc("/meetings/{id}/update", func(w http.ResponseWriter, r *http.Request) {
-		meetings.Edit(w, r, dbConnection)
+	routes.HandleFunc("/meetings/update", func(w http.ResponseWriter, r *http.Request) {
+		meetings.Update(w, r, dbConnection)
 	}).Methods("POST")
 }

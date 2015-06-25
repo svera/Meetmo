@@ -14,7 +14,7 @@ import (
 func Index(w http.ResponseWriter, r *http.Request, dbConnection *bongo.Connection) {
 	results := dbConnection.Collection("meetings").Find(nil)
 	meeting := &models.Meeting{}
-	meetings := make([]models.Meeting, 3)
+	meetings := make([]models.Meeting, 0)
 
 	for results.Next(meeting) {
 		meetings = append(meetings, *meeting)
@@ -74,9 +74,15 @@ func Edit(w http.ResponseWriter, r *http.Request, dbConnection *bongo.Connection
 
 func Update(w http.ResponseWriter, r *http.Request, dbConnection *bongo.Connection) {
 	meeting := &models.Meeting{}
-	vars := mux.Vars(r)
-	id := vars["id"]
-	err := dbConnection.Collection("meetings").FindById(bson.ObjectIdHex(id), meeting)
+	err := dbConnection.Collection("meetings").FindById(bson.ObjectIdHex(r.FormValue("id")), meeting)
+	if _, ok := err.(*bongo.DocumentNotFoundError); ok {
+		fmt.Println("document not found")
+	}
+	meeting.Title = r.FormValue("title")
+	meeting.Attendees = r.FormValue("attendees")
+	meeting.Agenda = r.FormValue("agenda")
+	meeting.Outcome = r.FormValue("outcome")
+	err = dbConnection.Collection("meetings").Save(meeting)
 	if vErr, ok := err.(*bongo.ValidationError); ok {
 		formErrors := getFormErrors(vErr)
 		data := struct {
@@ -88,14 +94,9 @@ func Update(w http.ResponseWriter, r *http.Request, dbConnection *bongo.Connecti
 		}
 		t, _ := template.ParseFiles("views/meetings/edit.html")
 		t.Execute(w, data)
+	} else {
+		http.Redirect(w, r, "/meetings", 301)
 	}
-	meeting.Title = r.FormValue("title")
-	meeting.Attendees = r.FormValue("attendees")
-	meeting.Agenda = r.FormValue("agenda")
-	meeting.Outcome = r.FormValue("outcome")
-
-	dbConnection.Collection("meetings").Save(meeting)
-	http.Redirect(w, r, "/meetings", 301)
 }
 
 func Delete(w http.ResponseWriter, r *http.Request, dbConnection *bongo.Connection) {
