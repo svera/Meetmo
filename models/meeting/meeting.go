@@ -5,16 +5,16 @@ import (
 	//"fmt"
 	"github.com/maxwellhealth/bongo"
 	"github.com/svera/meetmo/core/form"
-	//"time"
+	"time"
 )
 
 type Meeting struct {
 	bongo.DocumentBase `bson:",inline"`
 	Title              string
-	//Date      time.Date
-	Attendees string
-	Agenda    string
-	Outcome   string
+	Date               time.Time
+	Attendees          string
+	Agenda             string
+	Outcome            string
 }
 
 func (m *Meeting) Validate(*bongo.Collection) []error {

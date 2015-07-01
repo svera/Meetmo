@@ -1,13 +1,15 @@
 package meetings
 
 import (
-	//"fmt"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/maxwellhealth/bongo"
 	"github.com/svera/meetmo/core/form"
 	"github.com/svera/meetmo/models/meeting"
 	"html/template"
+	"log"
 	"net/http"
+	"time"
 )
 
 func Index(w http.ResponseWriter, r *http.Request, dbConnection *bongo.Connection) {
@@ -21,13 +23,18 @@ func New(w http.ResponseWriter, r *http.Request) {
 }
 
 func Create(w http.ResponseWriter, r *http.Request, dbConnection *bongo.Connection) {
+	date, err := time.Parse(time.RFC3339, fmt.Sprintf("%sT00:00:00+00:00", r.FormValue("date")))
+	if err != nil {
+		log.Println(err)
+	}
 	m := &meeting.Meeting{
 		Title:     r.FormValue("title"),
+		Date:      date,
 		Attendees: r.FormValue("attendees"),
 		Agenda:    r.FormValue("agenda"),
 		Outcome:   r.FormValue("outcome"),
 	}
-	err := dbConnection.Collection(meeting.CollectionName).Save(m)
+	err = dbConnection.Collection(meeting.CollectionName).Save(m)
 	if vErr, ok := err.(*bongo.ValidationError); ok {
 		formErrors := getFormErrors(vErr)
 		data := struct {
@@ -39,6 +46,8 @@ func Create(w http.ResponseWriter, r *http.Request, dbConnection *bongo.Connecti
 		}
 		t, _ := template.ParseFiles("views/layouts/base.html", "views/meetings/new.html")
 		t.Execute(w, data)
+	} else {
+		http.Redirect(w, r, "/meetings", 301)
 	}
 }
 

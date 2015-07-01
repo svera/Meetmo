@@ -17,7 +17,7 @@
   <li class="list-group-item">
       <a href="/meetings/{{ .GetId.Hex }}/edit">{{ .Title }}</a>
       <a href="/meetings/{{ .GetId.Hex }}/delete" class="pull-right"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a>
-      <br><time datetime="2001-05-15">21/3/2015</time>
+      <br><time datetime="{{ .Date }}">{{ .Date.Format "Jan 02, 2006" }}</time>
   </li>
   {{ end }}             
 </ul>

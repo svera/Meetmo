@@ -13,24 +13,34 @@
       <label for="date">Date</label>
       <input type="text" class="form-control" id="date" required="required" name="date">
     </div>
-    <div class="form-group has-error has-feedback">
+    <div class="form-group {{ if .FormErrors.Attendees }}has-error has-feedback{{ end }}">
       <label for="attendees">Attendees</label>
       <input type="text" class="form-control" id="attendees" required="required" aria-describedby="inputError2Status" name="attendees" value="{{ .Meeting.Attendees }}">
+      {{ if .FormErrors.Attendees }}
       <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
-      <span id="inputError2Status" class="sr-only">(error)</span>
+      <span id="inputError2Status" class="sr-only">{{ .FormErrors.Attendees }}</span>
+      {{ end }}
     </div>
-    <div class="form-group">
+    <div class="form-group {{ if .FormErrors.Agenda }}has-error has-feedback{{ end }}">
       <label for="agenda">Agenda</label>
       <textarea class="form-control" id="agenda" rows="20" required="required" name="agenda">{{ .Meeting.Agenda }}</textarea>
+      {{ if .FormErrors.Agenda }}
+      <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+      <span id="inputError2Status" class="sr-only">{{ .FormErrors.Agenda }}</span>
+      {{ end }}    
     </div>
-    <div class="form-group">
+    <div class="form-group {{ if .FormErrors.Outcome }}has-error has-feedback{{ end }}">
       <label for="outcome">Outcome</label>
       <textarea class="form-control" id="outcome" rows="20" required="required" name="outcome">{{ .Meeting.Outcome }}</textarea>
+      {{ if .FormErrors.Outcome }}
+      <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+      <span id="inputError2Status" class="sr-only">{{ .FormErrors.Outcome }}</span>
+      {{ end }}    
     </div>
     <div class="form-group">
       <button class="btn btn-default" id="cancel">Cancel</button>
       <button type="submit" class="btn btn-primary">Create</button>
-    </div>
+    </div>    
   </form>
 {{ end }}
 
@@ -42,7 +52,8 @@
   })
   $('#date').datepicker({
     weekStart: 1,
-    todayHighlight: true
+    todayHighlight: true,
+    format: "yyyy-mm-dd"
   });
   $('#date').datepicker('update', new Date());
   </script>    
