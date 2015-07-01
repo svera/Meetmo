@@ -2,9 +2,9 @@ package meeting
 
 import (
 	//"errors"
-	//"fmt"
+	"fmt"
 	"github.com/maxwellhealth/bongo"
-	"github.com/svera/meetmo/core/form"
+	"net/http"
 	"time"
 )
 
@@ -17,39 +17,51 @@ type Meeting struct {
 	Outcome            string
 }
 
-func (m *Meeting) Validate(*bongo.Collection) []error {
-	errs := make([]error, 0)
+func (m *Meeting) Validate(r *http.Request) map[string]string {
+	errs := make(map[string]string, 0)
+	var tErr error
+
+	m.Title = r.FormValue("title")
+	m.Date, tErr = time.Parse(time.RFC3339, fmt.Sprintf("%sT00:00:00+00:00", r.FormValue("date")))
+	m.Attendees = r.FormValue("attendees")
+	m.Agenda = r.FormValue("agenda")
+	m.Outcome = r.FormValue("outcome")
+
+	if tErr != nil {
+		errs["Date"] = "Wrong date format"
+	}
 
 	if len(m.Title) == 0 {
-		errs = append(errs, &form.Error{Field: "Title", Message: "Title cannot be empty"})
+		errs["Title"] = "Title cannot be empty"
 	}
 
 	if len(m.Title) > 255 {
-		errs = append(errs, &form.Error{Field: "Title", Message: "Title too large"})
+		errs["Title"] = "Title too large"
 	}
 
 	if len(m.Attendees) == 0 {
-		errs = append(errs, &form.Error{Field: "Attendees", Message: "Attendees cannot be empty"})
+		errs["Attendees"] = "Attendees cannot be empty"
 	}
 
 	if len(m.Attendees) > 4000 {
-		errs = append(errs, &form.Error{Field: "Attendees", Message: "Attendees too large"})
+		errs["Attendees"] = "Attendees too large"
 	}
 
 	if len(m.Agenda) == 0 {
-		errs = append(errs, &form.Error{Field: "Agenda", Message: "Agenda cannot be empty"})
+		errs["Agenda"] = "Agenda cannot be empty"
 	}
 
 	if len(m.Agenda) > 4000 {
-		errs = append(errs, &form.Error{Field: "Agenda", Message: "Agenda too large"})
+		errs["Agenda"] = "Agenda too large"
 	}
 
 	if len(m.Outcome) == 0 {
-		errs = append(errs, &form.Error{Field: "Outcome", Message: "Outcome cannot be empty"})
+		errs["Outcome"] = "Outcome cannot be empty"
 	}
 
 	if len(m.Outcome) > 4000 {
-		errs = append(errs, &form.Error{Field: "Outcome", Message: "Outcome too large"})
+		errs["Outcome"] = "Outcome too large"
 	}
+
 	return errs
 }
