@@ -1,0 +1,14 @@
+mongodb:
+  image: "mongo"
+  ports:
+    - "27017:27017"
+  volumes:
+    - /data/mongodb:/data/db
+app:
+  build: "./"
+  ports:
+    - "8080:8080"
+  volumes:
+    - ./:/code
+  links:
+    - "mongodb:mongodb"
