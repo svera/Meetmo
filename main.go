@@ -50,5 +50,5 @@ func getMongoURI() string {
 	if link, err := dockerlink.GetLink("mongodb", 27017, "tcp"); err == nil {
 		return fmt.Sprintf("%s:%d", link.Address, link.Port)
 	}
-	panic("mongodb connection not found, use MONGO_URL env var or a docker link with mongodb name")
+	return "localhost"
 }
